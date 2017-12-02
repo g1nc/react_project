@@ -1,24 +1,9 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Basic rails app with react + webpack
 
-Things you may want to cover:
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* rails new react_rails --webpack=react --database=postgresql -T
+* yarn add query-string axios
+* gem 'font-awesome-rails'
+* foreman start -f Procfile.dev -p 3000
