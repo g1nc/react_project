@@ -8,11 +8,11 @@ default: &default
 development:
   <<: *default
   host: localhost
-  database: react_rails_development
+  database: react_development
 
 test:
   <<: *default
-  database: react_rails_test
+  database: react_test
   host: localhost
 
 # As with config/secrets.yml, you never want to store sensitive information,
@@ -36,6 +36,4 @@ test:
 #
 production:
   <<: *default
-  database: react_rails_production
-  username: react_rails
-  password: <%= ENV['DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
