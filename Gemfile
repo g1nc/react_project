@@ -28,8 +28,7 @@ group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'capybara', '~> 2.13'
   gem 'dotenv-rails'
-  gem 'factory_bot'
-  gem 'factory_bot_rails'
+  gem 'factory_bot_rails', "~> 4.0"
   gem 'faker', git: 'https://github.com/stympy/faker.git', branch: 'master'
   gem 'pry-byebug'
   gem 'rails-controller-testing'

@@ -10,10 +10,48 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171209101113) do
+ActiveRecord::Schema.define(version: 20171209102426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "addresses", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "value", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_addresses_on_user_id"
+  end
+
+  create_table "cities", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "address_id"
+    t.bigint "product_id"
+    t.json "sender", null: false
+    t.json "receiver", null: false
+    t.string "status", default: "waiting", null: false
+    t.string "code", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["address_id"], name: "index_orders_on_address_id"
+    t.index ["product_id"], name: "index_orders_on_product_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "name", null: false
+    t.decimal "price", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_products_on_user_id"
+  end
 
   create_table "quotes", force: :cascade do |t|
     t.string "text"
@@ -35,8 +73,18 @@ ActiveRecord::Schema.define(version: 20171209101113) do
     t.inet "last_sign_in_ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "city_id"
+    t.string "role", default: "supplier"
+    t.string "name", null: false
+    t.index ["city_id"], name: "index_users_on_city_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "addresses", "users"
+  add_foreign_key "orders", "addresses"
+  add_foreign_key "orders", "products"
+  add_foreign_key "orders", "users"
+  add_foreign_key "products", "users"
+  add_foreign_key "users", "cities"
 end

@@ -263,8 +263,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   devise (~> 4.3)
   dotenv-rails
-  factory_bot
-  factory_bot_rails
+  factory_bot_rails (~> 4.0)
   faker!
   font-awesome-rails (~> 4.7)
   jbuilder (~> 2.5)
