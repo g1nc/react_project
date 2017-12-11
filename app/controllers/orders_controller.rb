@@ -8,7 +8,8 @@ class OrdersController < ApplicationController
   def show
     @order = Order.find_by(code: params[:id], user: current_user) || Order.find(params[:id])
   rescue => _exc
-    redirect_to code_orders_path(notice: 'Order not found!')
+    flash[:alert] = 'Order not found!'
+    redirect_to code_orders_path
   end
 
   def new
