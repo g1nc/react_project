@@ -1,0 +1,7 @@
+<%= form_tag '/order/show/', method: :get, id: 'operation' do %>
+  <div class="form-group">
+    <label for="code">Код операции</label>
+    <%= text_field_tag 'code', nil, class: 'form-control' %>
+  </div>
+  <%= submit_tag 'Отправить', class: 'btn btn-primary' %>
+<% end %>
