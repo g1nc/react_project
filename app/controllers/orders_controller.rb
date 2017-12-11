@@ -11,8 +11,9 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @order = Order.create(order_params.to_hash)
-    redirect_to order_path(@order)
+    @order = Order.new(order_params.to_hash)
+    return render 'new' unless @order.save
+    redirect_to @order
   end
 
   private
