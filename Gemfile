@@ -26,13 +26,13 @@ gem 'devise', '~> 4.3'
 gem 'font-awesome-rails', '~> 4.7'
 gem 'jquery-rails'
 gem 'sprockets-rails', require: 'sprockets/railtie'
+gem 'faker', git: 'https://github.com/stympy/faker.git', branch: 'master'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'capybara', '~> 2.13'
   gem 'dotenv-rails'
   gem 'factory_bot_rails', "~> 4.0"
-  gem 'faker', git: 'https://github.com/stympy/faker.git', branch: 'master'
   gem 'pry-byebug'
   gem 'rails-controller-testing'
   gem 'rspec-rails'
