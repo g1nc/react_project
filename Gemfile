@@ -21,8 +21,11 @@ gem 'turbolinks', '~> 5'
 # gem 'bcrypt', '~> 3.1.7'
 # gem 'capistrano-rails', group: :development
 
+gem 'bootstrap', '~> 4.0.0.beta2.1'
 gem 'devise', '~> 4.3'
 gem 'font-awesome-rails', '~> 4.7'
+gem 'jquery-rails'
+gem 'sprockets-rails', require: 'sprockets/railtie'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]

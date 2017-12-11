@@ -1,7 +1,8 @@
 class CreateOrders < ActiveRecord::Migration[5.1]
   def change
     create_table :orders do |t|
-      t.references :user, foreign_key: true
+      t.references :city,    foreign_key: true
+      t.references :user,    foreign_key: true
       t.references :address, foreign_key: true
       t.references :product, foreign_key: true
       t.json :sender,   null: false
@@ -11,5 +12,7 @@ class CreateOrders < ActiveRecord::Migration[5.1]
 
       t.timestamps
     end
+
+    add_index(:orders, :code)
   end
 end

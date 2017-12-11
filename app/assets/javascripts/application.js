@@ -12,4 +12,12 @@
 //
 //= require rails-ujs
 //= require turbolinks
+//= require jquery3
+//= require jquery_ujs
 //= require_tree .
+
+$(document).on('submit', 'form#operation', function(e) {
+  e.preventDefault();
+  var code = $('input#code').val();
+  window.location.pathname = '/orders/' + code;
+});

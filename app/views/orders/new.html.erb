@@ -1,0 +1,46 @@
+<!-- <%= javascript_pack_tag 'orders' %> -->
+<% if user_signed_in? %>
+  <%= form_tag '/order/show/', method: :get, id: 'operation' do %>
+    <div class="form-group">
+      <label for="code">Код операции</label>
+      <%= text_field_tag 'code', nil, class: 'form-control' %>
+    </div>
+    <%= submit_tag 'Отправить', class: 'btn btn-primary' %>
+  <% end %>
+<% else %>
+  <%= form_for @order do |f| %>
+    <div class="form-group">
+      <label for="order_sender_name">Имя отправителя</label>
+      <%= text_field_tag 'order[sender][name]', nil, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <label for="order_sender_phone">Телефон отправителя</label>
+      <%= text_field_tag 'order[sender][phone]', nil, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <label for="order_receiver_name">Имя получателя</label>
+      <%= text_field_tag 'order[receiver][name]', nil, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <label for="order_receiver_phone">Телефон получателя</label>
+      <%= text_field_tag 'order[receiver][phone]', nil, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <label for="order_city_id">Город</label>
+      <%= f.collection_select(:city_id, City.all, :id, :name, {}, { class: 'form-control' }) %>
+    </div>
+    <div class="form-group">
+      <label for="order_user_id">Наименование исполнителя</label>
+      <%= f.collection_select(:user_id, User.all, :id, :name, {}, { class: 'form-control' }) %>
+    </div>
+    <div class="form-group">
+      <label for="order_address_id">Адрес исполнителя</label>
+      <%= f.collection_select(:address_id, Address.all, :id, :value, {}, { class: 'form-control' }) %>
+    </div>
+    <div class="form-group">
+      <label for="order_product_id">Продукт</label>
+      <%= f.collection_select(:product_id, Product.all, :id, :name, {}, { class: 'form-control' }) %>
+    </div>
+    <%= f.submit 'Отправить', class: 'btn btn-primary' %>
+  <% end %>
+<% end %>

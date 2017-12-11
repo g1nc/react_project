@@ -10,9 +10,41 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require_tree .
- *= require font-awesome
- *= require_self
  */
 
-@import "quotes";
+// @import 'antd/dist/antd.css';
+@import 'font-awesome';
+@import 'bootstrap';
+@import 'quotes';
+
+body {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.header {
+  padding-bottom: 1rem;
+  border-bottom: .05rem solid #e5e5e5;
+  margin-bottom: 1rem;
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 3rem;
+  }
+}
+
+.card-block {
+  padding: 1.25rem;
+}
+
+// body {
+//   background: #f0f2f5;
+// }
+//
+// .logo {
+//   width: 120px;
+//   height: 31px;
+//   background: rgba(255,255,255,.2);
+//   margin: 16px 24px 16px 0;
+//   float: left;
+// }

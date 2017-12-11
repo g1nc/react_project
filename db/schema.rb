@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20171209102426) do
   end
 
   create_table "orders", force: :cascade do |t|
+    t.bigint "city_id"
     t.bigint "user_id"
     t.bigint "address_id"
     t.bigint "product_id"
@@ -40,6 +41,8 @@ ActiveRecord::Schema.define(version: 20171209102426) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["address_id"], name: "index_orders_on_address_id"
+    t.index ["city_id"], name: "index_orders_on_city_id"
+    t.index ["code"], name: "index_orders_on_code"
     t.index ["product_id"], name: "index_orders_on_product_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
@@ -83,6 +86,7 @@ ActiveRecord::Schema.define(version: 20171209102426) do
 
   add_foreign_key "addresses", "users"
   add_foreign_key "orders", "addresses"
+  add_foreign_key "orders", "cities"
   add_foreign_key "orders", "products"
   add_foreign_key "orders", "users"
   add_foreign_key "products", "users"

@@ -9,8 +9,21 @@ class Order < ApplicationRecord
   validates :code,     uniqueness: true
 
   STATUS_WAITING = 'waiting'.freeze
+  STATUS_DONE    = 'done'.freeze
+  STATUS_OVERDUE = 'overdue'.freeze
 
   before_validation :generate_code
+
+  def status_hash
+    case status
+    when STATUS_WAITING
+      { name: 'В ожидании', class: 'info' }
+    when STATUS_DONE
+      { name: 'Исполнено',  class: 'success' }
+    when STATUS_OVERDUE
+      { name: 'Просрочено', class: 'danger' }
+    end
+  end
 
   private
 
