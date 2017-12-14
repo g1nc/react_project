@@ -1,8 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  # get 'quotes', to: 'pages#home'
-
+  resources :users
   resources :orders do
     match 'code', on: :collection, to: 'orders#code', via: %i(get post)
   end

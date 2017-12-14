@@ -1,5 +1,8 @@
 class OrdersController < ApplicationController
   def index
+    redirect_to root_path unless current_user.admin?
+
+    @orders = Order.includes(:user, :product, :address).all
   end
 
   def code
