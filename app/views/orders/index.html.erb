@@ -7,8 +7,8 @@
       <th>Отправитель</th>
       <th>Получатель</th>
       <th>Исполнитель</th>
-      <th>Адрес</th>
       <th>Продукт</th>
+      <th>Код</th>
     </tr>
     </thead>
     <tbody>
@@ -24,9 +24,12 @@
             <span><%= order.receiver['name'] %></span><br>
             <span><%= order.receiver['phone'] %></span>
           </td>
-          <td><%= order.user.name %></td>
-          <td><%= order.address.value %></td>
+          <td>
+            <span><%= order.user.name %></span><br>
+            <span><%= order.address.value %></span>
+          </td>
           <td><%= order.product.name %></td>
+          <td><%= order.code %></td>
         </tr>
     <% end %>
     </tbody>
