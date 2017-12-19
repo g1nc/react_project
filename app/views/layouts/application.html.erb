@@ -48,7 +48,9 @@
         <% if alert.present? %><p><%= alert %></p><% end %>
         <!-- <div id="app" data-notice="<%= notice %>" data-alert="<%= alert %>"></div>
         <%= javascript_pack_tag 'application' %> -->
-        <%= yield %>
+        <div id="app" class="col-lg-12"></div>
+        <!-- <%= yield %> -->
+        <%= javascript_pack_tag 'application' %>
       </div>
     </div>
   </body>

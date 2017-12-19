@@ -1,11 +1,5 @@
 class Api::OrdersController < ApplicationController
   def index
-  end
-
-  def create
-  end
-
-  def show
-    @order = Order.find(params[:code] || params[:id])
+    @orders = Order.includes(:user, :product, :address).all
   end
 end
