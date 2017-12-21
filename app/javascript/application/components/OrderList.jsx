@@ -1,10 +1,9 @@
 import React from 'react'
-import { Table } from 'react-bootstrap'
 import axios from 'axios';
+import { Table } from 'react-bootstrap'
 
 export default class OrderList extends React.Component {
   constructor(props) {
-    debugger;
     super(props);
     this.state = {
       orders: []
@@ -18,7 +17,6 @@ export default class OrderList extends React.Component {
       })
       .catch(error => {
         console.error(error)
-        this.setState({ fireRedirect: true })
       })
   }
 
@@ -36,7 +34,7 @@ export default class OrderList extends React.Component {
     )
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.fetchOrders()
   }
 
