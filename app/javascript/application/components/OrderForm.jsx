@@ -2,10 +2,14 @@ import React from 'react'
 import axios from 'axios';
 import { contains } from 'underscore'
 import {
+  Row,
+  Col,
+  Button,
   FormGroup,
   ControlLabel,
   FormControl
 } from 'react-bootstrap'
+import MaskedInput from 'react-maskedinput'
 
 function FieldGroup({ id, label, help, collection, ...props }) {
   return (
@@ -16,6 +20,19 @@ function FieldGroup({ id, label, help, collection, ...props }) {
           <option key={object.id} value={object.id}>{object.name}</option>
         )}
       </FormControl>
+      {help && <HelpBlock>{help}</HelpBlock>}
+    </FormGroup>
+  );
+}
+function PhoneGroup({ id, label, help, collection, ...props }) {
+  return (
+    <FormGroup controlId={id}>
+      <ControlLabel>{label}</ControlLabel>
+      <MaskedInput {...props} mask="+7 (978) 1111111" type="text" className={'form-control'}>
+        {collection && collection.map((object) =>
+          <option key={object.id} value={object.id}>{object.name}</option>
+        )}
+      </MaskedInput>
       {help && <HelpBlock>{help}</HelpBlock>}
     </FormGroup>
   );
@@ -90,60 +107,62 @@ export default class OrderForm extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <FieldGroup
-          name="sender_name"
-          label="Имя отправителя"
-          id="senderName"
-          type="text" />
-        <FieldGroup
-          name="sender_phone"
-          label="Телефон отправителя"
-          id="senderPhone"
-          type="text" />
-        <FieldGroup
-          name="receiver_name"
-          label="Имя получателя"
-          id="receiverName"
-          type="text" />
-        <FieldGroup
-          name="receiver_phone"
-          label="Телефон получателя"
-          id="receiverPhone"
-          type="text" />
-        <FieldGroup
-          name="city_id"
-          label="Город"
-          id="citySelect"
-          componentClass="select"
-          collection={this.state.cities}
-          onChange={this.handleChange} />
-        <FieldGroup
-          name="user_id"
-          label="Наименование исполнителя"
-          id="userSelect"
-          componentClass="select"
-          collection={this.state.users}
-          onChange={this.handleChange} />
-        <FieldGroup
-          name="address_id"
-          label="Адрес исполнителя"
-          id="addressSelect"
-          componentClass="select"
-          collection={this.state.addresses}
-          onChange={this.handleChange} />
-        <FieldGroup
-          name="product_id"
-          label="Продукт"
-          id="productSelect"
-          componentClass="select"
-          collection={this.state.products}
-          onChange={this.handleChange} />
-        <input type="submit" value="Submit" />
-        {this.state.code && <Jumbotron>
-          <h1>{this.state.code}</h1>
-        </Jumbotron>}
-      </form>
+      <Row>
+        <Col lg={8} lgOffset={2}>
+          <form onSubmit={this.handleSubmit}>
+            <FieldGroup
+              name="sender_name"
+              label="Имя отправителя"
+              id="senderName"
+              type="text" />
+            <PhoneGroup
+              name="sender_phone"
+              label="Телефон отправителя"
+              id="senderPhone"/>
+            <FieldGroup
+              name="receiver_name"
+              label="Имя получателя"
+              id="receiverName"
+              type="text" />
+            <PhoneGroup
+              name="receiver_phone"
+              label="Телефон получателя"
+              id="receiverPhone" />
+            <FieldGroup
+              name="city_id"
+              label="Город"
+              id="citySelect"
+              componentClass="select"
+              collection={this.state.cities}
+              onChange={this.handleChange} />
+            <FieldGroup
+              name="user_id"
+              label="Наименование исполнителя"
+              id="userSelect"
+              componentClass="select"
+              collection={this.state.users}
+              onChange={this.handleChange} />
+            <FieldGroup
+              name="address_id"
+              label="Адрес исполнителя"
+              id="addressSelect"
+              componentClass="select"
+              collection={this.state.addresses}
+              onChange={this.handleChange} />
+            <FieldGroup
+              name="product_id"
+              label="Продукт"
+              id="productSelect"
+              componentClass="select"
+              collection={this.state.products}
+              onChange={this.handleChange} />
+            <Button bsStyle="primary" type="submit">Отправить</Button>
+            {this.state.code && <Jumbotron>
+              <h1>{this.state.code}</h1>
+            </Jumbotron>}
+          </form>
+        </Col>
+      </Row>
     );
   }
 }

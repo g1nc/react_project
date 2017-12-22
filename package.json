@@ -14,6 +14,7 @@
     "react-bootstrap": "^0.31.5",
     "react-bootstrap-maskedinput": "^0.4.0",
     "react-dom": "^16.2.0",
+    "react-maskedinput": "^4.0.0",
     "react-router-dom": "^4.2.2",
     "underscore": "^1.8.3"
   },
