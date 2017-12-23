@@ -8,16 +8,9 @@
 
   <body>
     <div class="container">
-      <div class="row">
-        <div class="col-lg-4 offset-lg-4">
-          <% if notice.present? %><p><%= notice %></p><% end %>
-          <% if alert.present? %><p><%= alert %></p><% end %>
-          <%= yield %>
-        </div>
-      </div>
 
       <div class="row">
-        <div id="root" class="col-lg-10 offset-lg-1"></div>
+        <div id="root" class="col-lg-10 offset-lg-1" data-alert="<%= alert %>" data-notice="<%= notice %>"></div>
       </div>
       <%= javascript_pack_tag 'application' %>
     </div>

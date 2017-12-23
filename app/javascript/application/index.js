@@ -5,8 +5,10 @@ import { BrowserRouter } from 'react-router-dom';
 
 import './styles/application.scss'
 
+const root = document.querySelector('#root')
 ReactDOM.render((
   <BrowserRouter>
-    <App />
+    <App alertMessage={root.dataset.alert}
+         noticeMessage={root.dataset.notice} />
   </BrowserRouter>
-), document.querySelector('#root'))
+), root)

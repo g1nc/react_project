@@ -5,14 +5,7 @@ class OrdersController < ApplicationController
     @orders = Order.includes(:user, :product, :address).all
   end
 
-  def code
-  end
-
   def show
-    @order = Order.find_by(code: params[:id], user: current_user) || Order.find(params[:id])
-  rescue => _exc
-    flash[:alert] = 'Order not found!'
-    redirect_to code_orders_path
   end
 
   def new
