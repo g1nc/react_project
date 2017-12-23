@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios';
 import { Table } from 'react-bootstrap'
 
-export default class OrderList extends React.Component {
+export default class OrderCode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
