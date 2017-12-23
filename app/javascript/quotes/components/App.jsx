@@ -5,19 +5,35 @@ import {
 } from 'react-router-dom'
 import QuotesDisplay from './QuotesDisplay'
 
-const App = (props) => (
-    <Router>
-        <div>
-            <Route
-                path='/'
-                startingQuoteId={props.startingQuoteId}
-                render={(routeProps) => <QuotesDisplay {...props} {...routeProps} />}
-            />
-        </div>
-    </Router>
-);
+export default class App extends Reac.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      signed_in: false
+    };
+  }
 
-// You will need this on the bottom of each component file
-// to make it available through ES6 'import' statements.
+  componentWillMount() {
+    axios.get(`/auth/signed_in.json`)
+      .then(response => {
+        this.setState({ order: response.data[0] })
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
 
-export default App
+  render() {
+    return (
+        <Router>
+            <div>
+                <Route
+                    path='/'
+                    startingQuoteId={props.startingQuoteId}
+                    render={(routeProps) => <QuotesDisplay {...props} {...routeProps} />}
+                />
+            </div>
+        </Router>
+    )
+  }
+}

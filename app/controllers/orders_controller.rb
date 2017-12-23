@@ -1,4 +1,6 @@
 class OrdersController < ApplicationController
+  before_action :authenticate_user!, except: [:create]
+
   def index
     redirect_to root_path unless current_user.admin?
 
@@ -6,10 +8,6 @@ class OrdersController < ApplicationController
   end
 
   def show
-  end
-
-  def new
-    @order = Order.new
   end
 
   def create

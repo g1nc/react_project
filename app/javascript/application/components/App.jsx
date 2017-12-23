@@ -4,21 +4,33 @@ import { Row, Col } from 'react-bootstrap'
 
 import Header from './layout/Header'
 import Orders from './Orders'
-import UserList from './users/UserList'
+import Users from './Users'
 
 const App = (props) => (
   <div>
-    <Header alertMessage={props.alertMessage} noticeMessage={props.noticeMessage} />
+    <Header token={getMetaContent}
+            alertMessage={props.alertMessage}
+            noticeMessage={props.noticeMessage} />
     <Row style={{paddingTop: '1rem'}}>
       <Col lg={12}>
         <Switch>
           <Route path='/orders' component={Orders} />
-          <Route exact path='/users' render={(routeProps) => <UserList {...props} {...routeProps} />} />
+          <Route path='/users'  component={Users} />
           <Route exact path='/' component={Orders} />
         </Switch>
       </Col>
     </Row>
   </div>
 );
+
+const getMetaContent = () => {
+  var metas = document.getElementsByTagName('meta');
+  for (var i=0; i<metas.length; i++) {
+    if (metas[i].getAttribute("name") == name) {
+      return metas[i].getAttribute("content");
+    }
+  }
+  return "";
+}
 
 export default App
