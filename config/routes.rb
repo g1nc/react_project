@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   root to: 'orders#new'
 
   namespace :api, defaults: { format: :json } do
-    resources :orders,    only: [:index]
+    resources :orders
     resources :cities,    only: [:index]
     resources :users,     only: [:index]
     resources :addresses, only: [:index]

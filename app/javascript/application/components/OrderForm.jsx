@@ -7,7 +7,8 @@ import {
   Button,
   FormGroup,
   ControlLabel,
-  FormControl
+  FormControl,
+  Jumbotron
 } from 'react-bootstrap'
 import MaskedInput from 'react-maskedinput'
 
@@ -28,7 +29,7 @@ function PhoneGroup({ id, label, help, collection, ...props }) {
   return (
     <FormGroup controlId={id}>
       <ControlLabel>{label}</ControlLabel>
-      <MaskedInput {...props} mask="+7 (978) 1111111" type="text" className={'form-control'}>
+      <MaskedInput {...props} mask="+7 (111) 111-11-11" type="text" className={'form-control'}>
         {collection && collection.map((object) =>
           <option key={object.id} value={object.id}>{object.name}</option>
         )}
@@ -48,7 +49,7 @@ export default class OrderForm extends React.Component {
       receiver_name:  '',
       receiver_phone: '',
       city_id:        '',
-      supplier_id:    '',
+      user_id:        '',
       address_id:     '',
       product_id:     '',
       code:           null,
@@ -66,6 +67,10 @@ export default class OrderForm extends React.Component {
     var state = {}
     state[event.target.name] = event.target.value
     this.setState(state);
+    switch (event.target.name) {
+      case 'city_id': this.reloadData('cities', event.target.value); break;
+      case 'user_id': this.reloadData('users', event.target.value); break;
+    }
   }
 
   reloadData(name, value) {
@@ -80,6 +85,31 @@ export default class OrderForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    var order_params = {
+      order: {
+        sender: {
+          name:  this.state.sender_name,
+          phone: this.state.sender_phone
+        },
+        receiver: {
+          name:  this.state.receiver_name,
+          phone: this.state.receiver_phone
+        },
+        city_id:    this.state.city_id,
+        user_id:    this.state.user_id,
+        address_id: this.state.address_id,
+        product_id: this.state.product_id,
+      },
+      authenticity_token: this.getMetaContent("csrf-token")
+    }
+    var self = this;
+    axios.post('api/orders', order_params)
+      .then(function (response) {
+        self.setState({ code: response.data.code });
+      })
+      .catch(error => {
+        console.error(error)
+      })
   }
 
   fetchCollection(name, params = '') {
@@ -87,8 +117,16 @@ export default class OrderForm extends React.Component {
       .then(response => {
         var state = {}
         state[name] = response.data
+        var id = response.data[0].id
+        switch(name) {
+          case 'cities':    this.setState({ city_id:    id }); break;
+          case 'users':     this.setState({ user_id:    id }); break;
+          case 'addresses': this.setState({ address_id: id }); break;
+          case 'products':  this.setState({ product_id: id }); break;
+        }
+
         if(contains(['cities', 'users'], name)) {
-          this.reloadData(name, response.data[0].id)
+          this.reloadData(name, id)
         }
         this.setState(state)
       })
@@ -105,29 +143,47 @@ export default class OrderForm extends React.Component {
     this.fetchData()
   }
 
+  getMetaContent(name) {
+    var metas = document.getElementsByTagName('meta');
+    for (var i=0; i<metas.length; i++) {
+      if (metas[i].getAttribute("name") == name) {
+        return metas[i].getAttribute("content");
+      }
+    }
+    return "";
+  }
+
   render() {
     return (
-      <Row>
+      <Row className={'justify-content-md-center'}>
         <Col lg={8} lgOffset={2}>
-          <form onSubmit={this.handleSubmit}>
+          {!this.state.code && <form onSubmit={this.handleSubmit}>
             <FieldGroup
               name="sender_name"
               label="Имя отправителя"
               id="senderName"
-              type="text" />
+              type="text"
+              onChange={this.handleChange}
+              required />
             <PhoneGroup
               name="sender_phone"
               label="Телефон отправителя"
-              id="senderPhone"/>
+              id="senderPhone"
+              onChange={this.handleChange}
+              required />
             <FieldGroup
               name="receiver_name"
               label="Имя получателя"
               id="receiverName"
-              type="text" />
+              type="text"
+              onChange={this.handleChange}
+              required />
             <PhoneGroup
               name="receiver_phone"
               label="Телефон получателя"
-              id="receiverPhone" />
+              id="receiverPhone"
+              onChange={this.handleChange}
+              required />
             <FieldGroup
               name="city_id"
               label="Город"
@@ -157,10 +213,13 @@ export default class OrderForm extends React.Component {
               collection={this.state.products}
               onChange={this.handleChange} />
             <Button bsStyle="primary" type="submit">Отправить</Button>
-            {this.state.code && <Jumbotron>
-              <h1>{this.state.code}</h1>
-            </Jumbotron>}
-          </form>
+          </form>}
+          {this.state.code && <div>
+            <br />
+            <Jumbotron>
+              <h1 className={'text-center'}>{this.state.code}</h1>
+            </Jumbotron>
+          </div>}
         </Col>
       </Row>
     );
