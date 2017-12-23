@@ -1,22 +1,13 @@
 class OrdersController < ApplicationController
+  before_action :authenticate_user!, except: [:create]
+
   def index
     redirect_to root_path unless current_user.admin?
 
     @orders = Order.includes(:user, :product, :address).all
   end
 
-  def code
-  end
-
   def show
-    @order = Order.find_by(code: params[:id], user: current_user) || Order.find(params[:id])
-  rescue => _exc
-    flash[:alert] = 'Order not found!'
-    redirect_to code_orders_path
-  end
-
-  def new
-    @order = Order.new
   end
 
   def create

@@ -1,5 +1,5 @@
 import React from 'react'
-import axios from 'axios';
+import axios from 'axios'
 import { contains } from 'underscore'
 import {
   Row,
@@ -205,8 +205,7 @@ export default class OrderForm extends React.Component {
               componentClass="select"
               collection={this.state.addresses}
               onChange={this.handleChange} />
-            <FieldGroup
-              name="product_id"
+            <FieldGroup name="product_id"
               label="Продукт"
               id="productSelect"
               componentClass="select"
@@ -225,17 +224,3 @@ export default class OrderForm extends React.Component {
     );
   }
 }
-
-//     <div class="form-group">
-//       <label for="order_address_id">Адрес исполнителя</label>
-//       <%= f.collection_select(:address_id, Address.all, :id, :value, {}, { class: 'form-control', required: true }) %>
-//     </div>
-
-//     <div class="form-group">
-//       <label for="order_product_id">Продукт</label>
-//       <%= f.collection_select(:product_id, Product.all, :id, :name, {}, { class: 'form-control', required: true }) %>
-//     </div>
-
-//     <%= f.submit 'Отправить', class: 'btn btn-primary' %>
-//   <% end %>
-// </div> -->

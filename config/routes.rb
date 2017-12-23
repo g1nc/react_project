@@ -2,9 +2,13 @@
 
 Rails.application.routes.draw do
   scope :auth do
-    get 'is_signed_in', to: 'auth#is_signed_in?'
+    get :signed_in, to: 'auth#signed_in?'
   end
+
+  resources :orders, only: %i[index show]
+
   devise_for :users
+  get :users, to: 'users#index'
 
   root to: 'orders#new'
 

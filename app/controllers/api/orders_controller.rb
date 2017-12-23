@@ -1,6 +1,7 @@
 class Api::OrdersController < ApplicationController
   def index
     @orders = Order.includes(:user, :product, :address).all
+    @orders = @orders.where(code: params[:code]) if params[:code]
   end
 
   def create
