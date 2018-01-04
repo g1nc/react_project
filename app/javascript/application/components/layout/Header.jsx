@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { Alert, Row, Col, NavDropdown } from 'react-bootstrap'
+import { Alert, Row, Col } from 'react-bootstrap'
 
 export default class Header extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ export default class Header extends React.Component {
   }
 
   componentWillMount() {
-    var self = this
+    let self = this;
     axios.get('/auth/signed_in')
       .then(function (response) {
         self.setState(response.data);
@@ -36,7 +36,7 @@ export default class Header extends React.Component {
   }
 
   signOut() {
-    var instance = axios.create({
+    let instance = axios.create({
       headers: {'X-CSRF-Token': this.getMetaContent("csrf-token")}
     });
     instance.delete('/users/sign_out.json', {
@@ -51,9 +51,9 @@ export default class Header extends React.Component {
   }
 
   getMetaContent(name) {
-    var metas = document.getElementsByTagName('meta');
-    for (var i=0; i<metas.length; i++) {
-      if (metas[i].getAttribute("name") == name) {
+    let metas = document.getElementsByTagName('meta');
+    for (let i=0; i<metas.length; i++) {
+      if (metas[i].getAttribute("name") === name) {
         return metas[i].getAttribute("content");
       }
     }
@@ -69,17 +69,17 @@ export default class Header extends React.Component {
               <li className={'nav-item'}>
                 <Link to='/' className={'nav-link'}>Главная</Link>
               </li>
-              {this.state.user && this.state.user.role == "admin" &&
+              {this.state.user && this.state.user.role === 'admin' &&
               <li className={'nav-item'}>
                 <Link to='/users' className={'nav-link'}>Исполнители</Link>
               </li>}
-              {this.state.user && this.state.user.role == "admin" &&
+              {this.state.user && this.state.user.role === 'admin' &&
               <li className={'nav-item'}>
                 <Link to='/orders' className={'nav-link'}>Заказы</Link>
               </li>}
-              <li className={'nav-item'}>
+              {this.state.user && <li className={'nav-item'}>
                 <Link to='/orders/code' className={'nav-link'}>Код</Link>
-              </li>
+              </li>}
               {!this.state.signed_in && <li className={'nav-item'}>
                 <Link to='/users/sign_in' className={'nav-link'}>Войти</Link>
               </li>}

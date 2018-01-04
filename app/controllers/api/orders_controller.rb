@@ -20,6 +20,7 @@ class Api::OrdersController < ApplicationController
   private
 
   def order_params
-    params.require(:order).permit(:city_id, :user_id, :address_id, :product_id, :status, sender: [:name, :phone], receiver: [:name, :phone])
+    params.require(:order).permit(
+      :city_id, :user_id, :address_id, :product_id, :status, sender: %i[name phone], receiver: %i[name phone])
   end
 end
