@@ -25,10 +25,3 @@ export const getOrder = code => {
     }
 };
 
-export const setCode = code => {
-    return {
-        type: 'SET_CODE',
-        code
-    }
-};
-

@@ -21,7 +21,7 @@ export default class OrderForm extends React.Component {
         user_id: '',
         address_id: '',
         product_id: '',
-        code: props.order ? props.order.code : null
+        code: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -64,9 +64,7 @@ export default class OrderForm extends React.Component {
         event.preventDefault();
         this.updateValues();
         axios.post('api/orders', { order: this.state })
-            .then(response => {
-                this.props.dispatch(addOrder(response.data))
-            })
+            .then(response => this.props.onSubmit(response.data))
             .catch(error => console.error(error))
     }
 
@@ -77,17 +75,17 @@ export default class OrderForm extends React.Component {
                 this.props.dispatch(getCities(response.data))
             })
             .catch(error => console.error(error));
-        axios.get(`/api/addresses`)
-            .then(response => this.props.dispatch(getAddresses(response.data)))
-            .catch(error => console.error(error));
-        axios.get(`/api/products`)
-            .then(response => this.props.dispatch(getProducts(response.data)))
-            .catch(error => console.error(error));
         axios.get(`/api/users`)
             .then(response => {
                 this.setState({user_id: response.data.find((user) => user.city_id === this.state.city_id).id});
                 this.props.dispatch(getUsers(response.data))
             })
+            .catch(error => console.error(error));
+        axios.get(`/api/addresses`)
+            .then(response => this.props.dispatch(getAddresses(response.data)))
+            .catch(error => console.error(error));
+        axios.get(`/api/products`)
+            .then(response => this.props.dispatch(getProducts(response.data)))
             .catch(error => console.error(error));
     }
 
@@ -100,11 +98,11 @@ export default class OrderForm extends React.Component {
                 <FieldGroup name="sender" label="Имя отправителя" id="senderName" data-attr="name"
                   onChange={this.handleChange} type="text" required />
                 <MaskedGroup name="sender" label="Телефон отправителя" id="senderPhone" data-attr="phone"
-                  onChange={this.handleChange} mask="+7 (111) 111-11-11" required />
+                  onChange={this.handleChange} required />
                 <FieldGroup name="receiver" label="Имя получателя" id="receiverName" data-attr="name"
                   onChange={this.handleChange} type="text" required />
                 <MaskedGroup name="receiver" label="Телефон получателя" id="receiverPhone" data-attr="phone"
-                  onChange={this.handleChange} mask="+7 (111) 111-11-11" required />
+                  onChange={this.handleChange} required />
                 <FieldGroup name="city_id" label="Город" id="citySelect"
                   collection={this.props.cities} onChange={this.handleChange} componentClass="select" />
                 <FieldGroup name="user_id" label="Наименование исполнителя" id="userSelect"

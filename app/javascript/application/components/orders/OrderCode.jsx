@@ -9,6 +9,20 @@ import Order from "./Order";
 export default class OrderCode extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {code: props.order ? props.order.code : ''};
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(e) {
+        this.setState({code: e.target.value});
+        this.props.setCode(e.target.value);
+    }
+
+    handleSubmit() {
+        this.props.setCode(this.state.code);
     }
 
     componentWillMount() {
@@ -22,22 +36,18 @@ export default class OrderCode extends React.Component {
         return (
             <Row className={'justify-content-md-center'}>
                 <Col lg={8}>
-                    <form onSubmit={this.props.handleChange}>
-                        <FieldGroup name="code" label="Код" id="orderCode"
-                                    type="text" onChange={this.props.handleChange}
-                                    value={this.props.code}
-                                    required />
-                        <Button bsStyle="primary" onSubmit={this.props.handleSubmit}>Отправить</Button>
-                    </form>
+                    <FieldGroup name="code" label="Код" id="orderCode" type="text"
+                                onChange={this.handleChange} value={this.state.code} required />
+                    <Button bsStyle="primary" onClick={this.handleSubmit}>Отправить</Button>
                     <div>
                         <br/>
-                        {this.props.order
-                         ? <Order order={this.props.order} />
-                         : (<Row>
+                        {this.props.order && <Order order={this.props.order} />}
+                        {!this.props.order &&
+                            <Row>
                                 <Col lg={12}>
                                     <Alert bsStyle="warning">Заказ не найден</Alert>
                                 </Col>
-                            </Row>)
+                            </Row>
                         }
                     </div>
                 </Col>
@@ -47,5 +57,5 @@ export default class OrderCode extends React.Component {
 }
 
 OrderCode.propTypes = {
-    handleChange: PropTypes.func.isRequired
+    setCode: PropTypes.func.isRequired
 };

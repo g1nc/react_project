@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import MaskedInput from 'react-maskedinput'
-import {FormGroup, ControlLabel, FormControl} from 'react-bootstrap'
+import {FormGroup, ControlLabel, FormControl, HelpBlock} from 'react-bootstrap'
 
 export const FieldGroup = ({ id, label, help, collection, ...props }) => (
     <FormGroup controlId={id}>
@@ -20,7 +20,7 @@ FieldGroup.propTypes = {
     label: PropTypes.string.isRequired
 };
 
-export const MaskedGroup = ({ id, label, help, mask, ...props }) => {
+export const MaskedGroup = ({ id, label, help, mask = '+7 (111) 111-11-11', ...props }) => {
     return (
         <FormGroup controlId={id}>
             <ControlLabel>{label}</ControlLabel>
@@ -32,6 +32,5 @@ export const MaskedGroup = ({ id, label, help, mask, ...props }) => {
 
 MaskedGroup.propTypes = {
     id:    PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    mask:  PropTypes.string.isRequired
+    label: PropTypes.string.isRequired
 };

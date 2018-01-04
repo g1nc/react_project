@@ -6,7 +6,7 @@ const orders = (state = [], action) => {
             return Object.assign({}, state, { order: null });
         case 'GET_ORDERS':
             return Object.assign({}, state, { collection: action.orders });
-        case 'SET_CODE':
+        case 'GET_ORDER':
             return Object.assign({}, state, {
                 code:  action.code,
                 order: state.collection.find(order => order.code === action.code) || null
