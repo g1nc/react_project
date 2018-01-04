@@ -1,224 +1,133 @@
 import React from 'react'
 import axios from 'axios'
-import { contains } from 'underscore'
-import {
-  Row,
-  Col,
-  Button,
-  FormGroup,
-  ControlLabel,
-  FormControl,
-  Jumbotron
-} from 'react-bootstrap'
-import MaskedInput from 'react-maskedinput'
+import { cloneDeep, filter } from 'lodash'
+import { Row, Col, Button, Jumbotron } from 'react-bootstrap'
 
-function FieldGroup({ id, label, help, collection, ...props }) {
-  return (
-    <FormGroup controlId={id}>
-      <ControlLabel>{label}</ControlLabel>
-      <FormControl {...props}>
-        {collection && collection.map((object) =>
-          <option key={object.id} value={object.id}>{object.name}</option>
-        )}
-      </FormControl>
-      {help && <HelpBlock>{help}</HelpBlock>}
-    </FormGroup>
-  );
-}
-function PhoneGroup({ id, label, help, collection, ...props }) {
-  return (
-    <FormGroup controlId={id}>
-      <ControlLabel>{label}</ControlLabel>
-      <MaskedInput {...props} mask="+7 (111) 111-11-11" type="text" className={'form-control'}>
-        {collection && collection.map((object) =>
-          <option key={object.id} value={object.id}>{object.name}</option>
-        )}
-      </MaskedInput>
-      {help && <HelpBlock>{help}</HelpBlock>}
-    </FormGroup>
-  );
-}
+import {FieldGroup, MaskedGroup} from "../layout/FormGroups"
+import {getCities} from "../../actions/cities";
+import {getAddresses} from "../../actions/addresses";
+import {getProducts} from "../../actions/products";
+import {addOrder} from "../../actions/orders";
+import {getUsers} from "../../actions/users";
 
 export default class OrderForm extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      sender_name:    '',
-      sender_phone:   '',
-      receiver_name:  '',
-      receiver_phone: '',
-      city_id:        '',
-      user_id:        '',
-      address_id:     '',
-      product_id:     '',
-      code:           null,
-      cities:         [],
-      users:          [],
-      addresses:      [],
-      products:       []
+        sender: { name: '', phone: '' },
+        receiver: { name: '', phone: '' },
+        city_id: '',
+        user_id: '',
+        address_id: '',
+        product_id: '',
+        code: props.order ? props.order.code : null
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.updateValues = this.updateValues.bind(this);
   }
 
-  handleChange(event) {
-    var state = {}
-    state[event.target.name] = event.target.value
-    this.setState(state);
-    switch (event.target.name) {
-      case 'city_id': this.reloadData('cities', event.target.value); break;
-      case 'user_id': this.reloadData('users', event.target.value); break;
-    }
-  }
-
-  reloadData(name, value) {
-    if(name == 'cities') {
-      this.fetchCollection('users', `city_id=${value}`)
-    }
-    if(name == 'users') {
-      this.fetchCollection('addresses', `user_id=${value}`)
-      this.fetchCollection('products', `user_id=${value}`)
-    }
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-    var order_params = {
-      order: {
-        sender: {
-          name:  this.state.sender_name,
-          phone: this.state.sender_phone
-        },
-        receiver: {
-          name:  this.state.receiver_name,
-          phone: this.state.receiver_phone
-        },
-        city_id:    this.state.city_id,
-        user_id:    this.state.user_id,
-        address_id: this.state.address_id,
-        product_id: this.state.product_id,
-      },
-      authenticity_token: this.getMetaContent("csrf-token")
-    }
-    var self = this;
-    axios.post('api/orders', order_params)
-      .then(function (response) {
-        self.setState({ code: response.data.code });
-      })
-      .catch(error => {
-        console.error(error)
-      })
-  }
-
-  fetchCollection(name, params = '') {
-    axios.get(`api/${name}?${params}`)
-      .then(response => {
-        var state = {}
-        state[name] = response.data
-        var id = response.data[0].id
-        switch(name) {
-          case 'cities':    this.setState({ city_id:    id }); break;
-          case 'users':     this.setState({ user_id:    id }); break;
-          case 'addresses': this.setState({ address_id: id }); break;
-          case 'products':  this.setState({ product_id: id }); break;
+    handleChange(event) {
+        let target = event.target;
+        let state  = {};
+        switch (target.name) {
+            case 'city_id':
+                let city_id = parseInt(target.value) || target.value;
+                state = {city_id: city_id};
+                break;
+            case 'receiver':
+                state[target.name] = cloneDeep(this.state[target.name]);
+                state[target.name][target.dataset.attr] = target.value;
+                break;
+            case 'sender':
+                state[target.name] = cloneDeep(this.state[target.name]);
+                state[target.name][target.dataset.attr] = target.value;
+                break;
+            default:
+                state[target.name] = parseInt(target.value) || target.value;
+                break;
         }
-
-        if(contains(['cities', 'users'], name)) {
-          this.reloadData(name, id)
-        }
-        this.setState(state)
-      })
-      .catch(error => {
-        console.error(error)
-      })
-  }
-
-  fetchData() {
-    this.fetchCollection('cities')
-  }
-
-  componentWillMount() {
-    this.fetchData()
-  }
-
-  getMetaContent(name) {
-    var metas = document.getElementsByTagName('meta');
-    for (var i=0; i<metas.length; i++) {
-      if (metas[i].getAttribute("name") == name) {
-        return metas[i].getAttribute("content");
-      }
+        this.updateValues();
+        this.setState(state);
     }
-    return "";
-  }
+
+    updateValues(city_id = this.state.city_id) {
+        let user_id    = this.props.users.find(user => user.city_id === city_id).id;
+        let address_id = this.props.addresses.find(address => address.user_id === user_id).id;
+        let product_id = this.props.products.find(product => product.user_id === user_id).id;
+        this.setState({user_id: user_id, address_id: address_id, product_id: product_id})
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        this.updateValues();
+        axios.post('api/orders', { order: this.state })
+            .then(response => {
+                this.props.dispatch(addOrder(response.data))
+            })
+            .catch(error => console.error(error))
+    }
+
+    componentWillMount() {
+        axios.get(`/api/cities`)
+            .then(response => {
+                this.setState({city_id: response.data[0].id});
+                this.props.dispatch(getCities(response.data))
+            })
+            .catch(error => console.error(error));
+        axios.get(`/api/addresses`)
+            .then(response => this.props.dispatch(getAddresses(response.data)))
+            .catch(error => console.error(error));
+        axios.get(`/api/products`)
+            .then(response => this.props.dispatch(getProducts(response.data)))
+            .catch(error => console.error(error));
+        axios.get(`/api/users`)
+            .then(response => {
+                this.setState({user_id: response.data.find((user) => user.city_id === this.state.city_id).id});
+                this.props.dispatch(getUsers(response.data))
+            })
+            .catch(error => console.error(error));
+    }
 
   render() {
     return (
       <Row className={'justify-content-md-center'}>
         <Col lg={8} lgOffset={2}>
-          {!this.state.code && <form onSubmit={this.handleSubmit}>
-            <FieldGroup
-              name="sender_name"
-              label="Имя отправителя"
-              id="senderName"
-              type="text"
-              onChange={this.handleChange}
-              required />
-            <PhoneGroup
-              name="sender_phone"
-              label="Телефон отправителя"
-              id="senderPhone"
-              onChange={this.handleChange}
-              required />
-            <FieldGroup
-              name="receiver_name"
-              label="Имя получателя"
-              id="receiverName"
-              type="text"
-              onChange={this.handleChange}
-              required />
-            <PhoneGroup
-              name="receiver_phone"
-              label="Телефон получателя"
-              id="receiverPhone"
-              onChange={this.handleChange}
-              required />
-            <FieldGroup
-              name="city_id"
-              label="Город"
-              id="citySelect"
-              componentClass="select"
-              collection={this.state.cities}
-              onChange={this.handleChange} />
-            <FieldGroup
-              name="user_id"
-              label="Наименование исполнителя"
-              id="userSelect"
-              componentClass="select"
-              collection={this.state.users}
-              onChange={this.handleChange} />
-            <FieldGroup
-              name="address_id"
-              label="Адрес исполнителя"
-              id="addressSelect"
-              componentClass="select"
-              collection={this.state.addresses}
-              onChange={this.handleChange} />
-            <FieldGroup name="product_id"
-              label="Продукт"
-              id="productSelect"
-              componentClass="select"
-              collection={this.state.products}
-              onChange={this.handleChange} />
-            <Button bsStyle="primary" type="submit">Отправить</Button>
-          </form>}
-          {this.state.code && <div>
-            <br />
-            <Jumbotron>
-              <h1 className={'text-center'}>{this.state.code}</h1>
-            </Jumbotron>
-          </div>}
+          {!this.props.order &&
+            <form onSubmit={this.handleSubmit}>
+                <FieldGroup name="sender" label="Имя отправителя" id="senderName" data-attr="name"
+                  onChange={this.handleChange} type="text" required />
+                <MaskedGroup name="sender" label="Телефон отправителя" id="senderPhone" data-attr="phone"
+                  onChange={this.handleChange} mask="+7 (111) 111-11-11" required />
+                <FieldGroup name="receiver" label="Имя получателя" id="receiverName" data-attr="name"
+                  onChange={this.handleChange} type="text" required />
+                <MaskedGroup name="receiver" label="Телефон получателя" id="receiverPhone" data-attr="phone"
+                  onChange={this.handleChange} mask="+7 (111) 111-11-11" required />
+                <FieldGroup name="city_id" label="Город" id="citySelect"
+                  collection={this.props.cities} onChange={this.handleChange} componentClass="select" />
+                <FieldGroup name="user_id" label="Наименование исполнителя" id="userSelect"
+                  collection={filter(this.props.users, (user) => user.city_id === this.state.city_id)}
+                  onChange={this.handleChange} componentClass="select" />
+                <FieldGroup name="address_id" label="Адрес исполнителя" id="addressSelect"
+                  collection={filter(this.props.addresses, (address) => address.user_id === this.state.user_id)}
+                  onChange={this.handleChange} componentClass="select" />
+                <FieldGroup name="product_id" label="Продукт" id="productSelect"
+                  collection={filter(this.props.products, (product) => product.user_id === this.state.user_id)}
+                  onChange={this.handleChange} componentClass="select" />
+                <Button bsStyle="primary" type="submit">Отправить</Button>
+              </form>
+          }
+          {this.props.order &&
+              <div>
+                  <br/>
+                  <Jumbotron>
+                      <h1 className={'text-center'}>{this.props.order.code}</h1>
+                  </Jumbotron>
+                  <Button bsStyle="primary" type="submit" onClick={this.props.resetOrder}>Новый заказ</Button>
+              </div>
+          }
         </Col>
       </Row>
     );

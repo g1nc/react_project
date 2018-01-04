@@ -3,20 +3,15 @@ import { Switch, Route } from 'react-router-dom'
 import { Row, Col } from 'react-bootstrap'
 
 import Header from './layout/Header'
-import Orders from './Orders'
-import Users from './Users'
+import AppRoutes from '../routes/index';
 
 const App = (props) => (
   <div>
-    <Header token={getMetaContent}
-            alertMessage={props.alertMessage}
-            noticeMessage={props.noticeMessage} />
+    <Header token={getMetaContent} alert={props.alert} notice={props.notice} />
     <Row style={{paddingTop: '1rem'}}>
       <Col lg={12}>
         <Switch>
-          <Route path='/orders' component={Orders} />
-          <Route path='/users'  component={Users} />
-          <Route exact path='/' component={Orders} />
+          <AppRoutes/>
         </Switch>
       </Col>
     </Row>
@@ -31,6 +26,6 @@ const getMetaContent = () => {
     }
   }
   return "";
-}
+};
 
 export default App
