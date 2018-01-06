@@ -36,4 +36,5 @@ test:
 #
 production:
   <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
+  host: localhost
+  database: react_project

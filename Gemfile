@@ -12,7 +12,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'webpacker'
 # See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+gem 'therubyracer', platforms: :ruby
 
 gem 'coffee-rails', '~> 4.2'
 gem 'jbuilder', '~> 2.5'
@@ -42,6 +42,10 @@ group :development do
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'rubocop', '~> 0.49.0'
   gem 'spring'
+  gem 'mina'
+  gem 'mina', require: false
+  gem 'mina-puma', require: false, github: 'untitledkingdom/mina-puma'
+  gem 'mina-webpacker', require: false
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'web-console', '>= 3.3.0'
 end

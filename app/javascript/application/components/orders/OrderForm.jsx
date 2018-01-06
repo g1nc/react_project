@@ -7,7 +7,6 @@ import {FieldGroup, MaskedGroup} from "../layout/FormGroups"
 import {getCities} from "../../actions/cities";
 import {getAddresses} from "../../actions/addresses";
 import {getProducts} from "../../actions/products";
-import {addOrder} from "../../actions/orders";
 import {getUsers} from "../../actions/users";
 
 export default class OrderForm extends React.Component {
