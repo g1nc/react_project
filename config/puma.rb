@@ -60,7 +60,7 @@ pidfile    '/var/www/react_project/shared/tmp/pids/puma.pid'
 state_path '/var/www/react_project/shared/tmp/sockets/puma.state'
 directory  '/var/www/react_project/current'
 
-daemonize false
+daemonize true
 
 activate_control_app 'unix:///var/www/react_project/shared/tmp/sockets/pumactl.sock'
 

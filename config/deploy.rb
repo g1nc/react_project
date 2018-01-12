@@ -14,7 +14,7 @@ set :user,             'deploy'
 # Shared dirs and files will be symlinked into the app-folder by the 'deploy:link_shared_paths' step.
 # Some plugins already add folders to shared_dirs like `mina/rails` add `public/assets`, `vendor/bundle` and many more
 # run `mina -d` to see all folders and files already included in `shared_dirs` and `shared_files`
-# set :shared_dirs,  fetch(:shared_dirs,  []).push('public/packs')
+set :shared_dirs,  fetch(:shared_dirs,  []).push('node_modules')
 set :shared_files, fetch(:shared_files, []).push('config/database.yml',
                                                  'config/secrets.yml',
                                                  'config/puma.rb',
@@ -24,9 +24,10 @@ task :remote_environment do
   invoke :'rvm:use', 'ruby-2.4.2@default'
 end
 
-# Put any custom commands you need to run at setup
-# All paths in `shared_dirs` and `shared_paths` will be created on their own.
 task :setup do
+  command %[mkdir "#{fetch(:shared_path)}/tmp/sockets"]
+  command %[mkdir "#{fetch(:shared_path)}/tmp/pids"]
+  command %[mkdir "#{fetch(:shared_path)}/public/packs"]
   command %[touch "#{fetch(:shared_path)}/config/database.yml"]
   command %[touch "#{fetch(:shared_path)}/config/secrets.yml"]
   command %[touch "#{fetch(:shared_path)}/config/puma.rb"]
@@ -34,7 +35,7 @@ task :setup do
   comment "Be sure to edit '#{fetch(:shared_path)}/config/database.yml', 'secrets.yml' and puma.rb."
 end
 
-desc "Deploys the current version to the server."
+desc 'Deploys the current version to the server.'
 task :deploy do
   # invoke :'git:ensure_pushed'
   deploy do
